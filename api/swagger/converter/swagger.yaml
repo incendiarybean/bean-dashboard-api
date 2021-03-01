@@ -1,0 +1,410 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: This is Ben's Intranet API
+host: {HOSTNAME}
+basePath: /api/v0
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+tags:
+  - name: Sticky Notes
+    description: This allows me to save, edit and delete Sticky Notes
+  - name: News
+    description: This allows me to save news articles
+  - name: Weather
+    description: This allows me to save weather articles
+  - name: Search
+    description: This allows me to use a custom Google Search engine
+  - name: Friday
+    description: This allows me to record stats of our pathetic Friday gameplay
+  - name: Sync
+    description: This allows me to Sync the Weather and News endpoints
+securityDefinitions:
+  APIKeyHeader:
+    type: apiKey
+    in: header
+    name: X-API-Key
+security:
+  - APIKeyHeader: []
+paths:
+  /sticky:
+    x-swagger-router-controller: sticky
+    get:
+      security:
+        - APIKeyHeader: []
+      tags:
+        - Sticky Notes
+      summary: Returns a all notes
+      operationId: getStickies
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sticky'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      security:
+        - APIKeyHeader: []
+      consumes:
+        - application/json
+        - application/octet-stream
+      parameters:
+        - in: body
+          name: note
+          description: Required body to create note
+          required: false
+          schema:
+            type: object
+      tags:
+        - Sticky Notes
+      summary: Returns a new note
+      operationId: postSticky
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sticky-id'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /sticky/{id}:
+    x-swagger-router-controller: sticky
+    get:
+      security:
+        - APIKeyHeader: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+      tags:
+        - Sticky Notes
+      summary: Returns a specific note
+      operationId: getSticky
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sticky-id'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    patch:
+      security:
+        - APIKeyHeader: []
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+        - in: body
+          name: note
+          description: Note edit body
+          required: true
+          schema:
+            type: object
+            required:
+            - top
+            - left
+            - title
+            - content
+            - color
+            properties:
+              top:
+                type: number
+              left:
+                type: number
+              title:
+                type: string
+              content:
+                type: string
+              color:
+                type: string
+      tags:
+        - Sticky Notes
+      summary: Edit to complete on Sticky Note
+      operationId: patchSticky
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sticky'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      security:
+        - APIKeyHeader: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+      tags:
+        - Sticky Notes
+      summary: Delete to complete on Sticky Note
+      operationId: deleteSticky
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sticky'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /news:
+    x-swagger-router-controller: news
+    get:
+      security:
+        - APIKeyHeader: []
+      tags:
+        - News
+      summary: Returns all stored news
+      operationId: getNews
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sticky-id'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /weather:
+    x-swagger-router-controller: weather
+    get:
+      security:
+        - APIKeyHeader: []
+      parameters:
+        - in: query
+          name: date
+          required: true
+          type: string
+          enum:
+            - daily
+      tags:
+        - Weather
+      summary: Returns all stored news
+      operationId: getWeather
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sticky-id'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /sync:
+    x-swagger-router-controller: sync
+    get:
+      security:
+        - APIKeyHeader: []
+      tags:
+        - Sync
+      summary: Syncs news and weather from API endpoints
+      operationId: getSync
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sync'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /friday:
+    x-swagger-router-controller: friday
+    get:
+      parameters:
+        - in: query
+          name: action
+          type: string
+          enum:
+            - today
+      security:
+        - APIKeyHeader: []
+      tags:
+        - Friday
+      summary: Gets Friday's data
+      operationId: getFriday
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sync'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      parameters:
+        - in: query
+          name: action
+          type: string
+          required: true
+          enum:
+            - today
+            - all
+      security:
+        - APIKeyHeader: []
+      tags:
+        - Friday
+      summary: Delete Friday's data (today, all)
+      operationId: deleteFriday
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sync'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    patch:
+      parameters:
+        - in: query
+          name: type
+          type: string
+          required: true
+          enum:
+            - win
+            - loss
+        - in: query
+          name: action
+          type: string
+          required: true
+          enum:
+            - add
+            - remove
+      security:
+        - APIKeyHeader: []
+      tags:
+        - Friday
+      summary: Patch Friday's data (win, loss)
+      operationId: patchFriday
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sync'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /search:
+    x-swagger-router-controller: google
+    get:
+      parameters:
+        - in: query
+          name: q
+          type: string
+      security:
+        - APIKeyHeader: []
+      tags:
+        - Search
+      summary: Gets Google results
+      operationId: getGoogle
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sync'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+definitions:
+  sync:
+    properties:
+      message:
+        type: string
+  sticky:
+    properties:
+      message:
+        type: string
+      itemsLength:
+        type: integer
+      items:
+        type: array
+        items:
+          type: object
+          properties:
+            _id:
+              type: string
+            dateTime:
+              type: string
+            top:
+              type: number
+            left:
+              type: number
+            title:
+              type: string
+            content:
+              type: string
+            color:
+              type: string
+            showColor:
+              type: string
+  sticky-id:
+    properties:
+      message:
+        type: string
+      response:
+        type: object
+        properties:
+          _id:
+            type: string
+          dateTime:
+            type: string
+          top:
+            type: integer
+          left:
+            type: integer
+          title:
+            type: string
+          content:
+            type: string
+          color:
+            type: string
+          showColor:
+            type: string
+  note:
+    properties:
+      _id:
+        type: string
+      dateTime:
+        type: string
+      top:
+        type: integer
+      left:
+        type: integer
+      title:
+        type: string
+      content:
+        type: string
+      color:
+        type: string
+      showColor:
+        type: string
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
