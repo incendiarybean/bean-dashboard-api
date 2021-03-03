@@ -208,6 +208,29 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /discord/{channel}:
+    x-swagger-router-controller: discord
+    get:
+      parameters:
+        - in: path
+          name: channel
+          type: string
+          required: true
+      security:
+        - APIKeyHeader: []
+      tags:
+        - Discord
+      summary: Checks Discord
+      operationId: getDiscord
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: object
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /sync:
     x-swagger-router-controller: sync
     get:

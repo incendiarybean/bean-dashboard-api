@@ -114,14 +114,14 @@ const getSync = (req, res) => {
             getNews()
             .then(() => {
                 console.debug(`${new Date()}: Syncing News Completed.`);
-                return res.json({message: "Sync Successful."})
+                return res.json({message: "Sync Successful."});
             })
             .catch(e => {
                 return res.status(502).json({message: e.toString()});
             })
         })
         .catch(e => {
-            return res.status(502).json({message: e.toString()})
+            return res.status(502).json({message: e.toString()});
         })
     } catch (e) {
         return res.status(502).json({message: e.toString()});
