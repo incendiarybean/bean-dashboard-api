@@ -9,10 +9,16 @@ const db = require('../adapters/db'),
 //////////////////
 const { Server } = require("socket.io");
 
-const io = new Server(80);
+const io = new Server(process.env.DISCORD_PORT);
+console.log(`[${new Date()}] Launching socket on ${process.env.DISCORD_PORT}`);
 
 client.on('ready', () => {
     console.log('Bot initialised!');
+
+    client.user.setActivity("Sitting here and taking it...", {
+        type: "PLAYING"
+    });
+
 });
 
 client.on('message', message => {
