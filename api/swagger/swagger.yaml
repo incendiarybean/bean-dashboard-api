@@ -350,6 +350,58 @@ paths:
           description: Error
           schema:
             $ref: "#/definitions/ErrorResponse"
+  /auth:
+    x-swagger-router-controller: auth
+    post:
+      parameters:
+        - in: body
+          name: loginRequest
+          description: Required body to create user
+          required: true
+          schema:
+            $ref: '#/definitions/loginRequest'
+            type: object
+      security:
+        - APIKeyHeader: []
+      tags:
+        - Authentication
+      summary: Attempts to retrieve username
+      operationId: loginRequest
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sync'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"   
+  /auth/create:
+    x-swagger-router-controller: auth
+    post:
+      parameters:
+        - in: body
+          name: userDetails
+          description: Required body to create user
+          required: true
+          schema:
+            $ref: '#/definitions/userDetails'
+            type: object
+      security:
+        - APIKeyHeader: []
+      tags:
+        - Authentication
+      summary: Gets Signed in user information
+      operationId: newUser
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: '#/definitions/sync'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
   /swagger:
     x-swagger-pipe: swagger_raw
 definitions:
@@ -357,6 +409,22 @@ definitions:
     properties:
       message:
         type: string
+  loginRequest:
+    properties:
+      username: 
+        type: string
+  userDetails:
+    properties:
+      username: 
+        type: string
+      password: 
+        type: string
+      firstname:
+        type: string
+      surname: 
+        type: string
+      email:
+        type: string      
   sticky:
     properties:
       message:

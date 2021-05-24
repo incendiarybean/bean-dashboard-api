@@ -20,6 +20,8 @@ module.exports = {
     },
     'MAC': process.env.MAC,
     'mongoDB':{
+        'username': 'benwe',
+        'password': 'MYRaspian123f!',
         'host': process.env.MONGO_HOST,
         'port': process.env.MONGO_PORT
     }

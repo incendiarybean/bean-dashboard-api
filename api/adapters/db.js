@@ -1,19 +1,25 @@
-const MongoClient = require('mongodb').MongoClient;
-const mongoDB = require('../../config/module-config').mongoDB;
+const MongoClient = require('mongodb').MongoClient,
+    mongoDB = require('../../config/module-config').mongoDB;
 
-const url = mongoDB.host + mongoDB.port;
-
+const uri = `mongodb://${mongoDB.username}:${mongoDB.password}@${mongoDB.host}${mongoDB.port}`;
 module.exports = {
     connect: () => {
         return new Promise((resolve, reject) => {
-            MongoClient.connect(url, {
-                useUnifiedTopology: true
-            },
-            function (err, client) {
-                if (err) return reject({code: 401, message: err});
-                var db = client.db('intranet');
-                return resolve({db, client});
-            });
+            try{
+                MongoClient.connect(uri, {
+                    useUnifiedTopology: true,
+                    useNewUrlParser: true
+                },
+                function (err, client) {
+                    if (err) return reject({code: 401, message: err});
+                    var db = client.db('intranet');
+                    return resolve({db, client});
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        }).catch(e => {
+            console.log(e);
         });
     },
     insert: (collection, data) => {
