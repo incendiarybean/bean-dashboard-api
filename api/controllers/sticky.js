@@ -46,8 +46,11 @@ const editSticky = async (req, res) => {
                     'title':req.body.title,
                     'content':req.body.content,
                     'color':req.body.color,
-                    'showColor':'hidden'
-                },
+                    'showColor':'hidden',
+                    'author':req.body.author,
+                    'lastModified': new Date().toISOString(),
+                    'notification': req.body.notification ? req.body.notification : null
+                }, 
                 {
                     _id:ObjectId(req.swagger.params.id.value)
                 }
@@ -95,7 +98,9 @@ const addSticky = async (req, res) => {
                     'title':'',
                     'content':'',
                     'color':'blue',
-                    'showColor':'hidden'
+                    'showColor':'hidden',
+                    'author': req.body.author,
+                    'lastModified': new Date().toISOString()
                 }
             )
             .then(data => {

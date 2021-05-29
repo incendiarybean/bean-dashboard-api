@@ -11,6 +11,5 @@ Dockerfile.prod
 .git
 .eslintcache
 .gitignore
-package-lock.json
 README.md
 src/index.css

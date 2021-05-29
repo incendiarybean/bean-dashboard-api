@@ -99,7 +99,10 @@ client.on('voiceStateUpdate', data => {
 
 });
 
-client.login(process.env.DISCORD_KEY);
+client.login(process.env.DISCORD_KEY).catch(e => {
+    console.log(process.env.DISCORD_KEY);
+    console.log(`ERROR: ${e.toString()}`);
+});
 
 const listDiscord = async (req, res) => {
 
